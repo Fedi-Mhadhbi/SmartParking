@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.LocalParking
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,14 +31,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
 import com.fedi.smartparking.ui.components.SmartButton
 import com.fedi.smartparking.ui.theme.Emerald
-import com.fedi.smartparking.ui.theme.LightBorder
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
-import com.fedi.smartparking.ui.theme.SmartParkingSpacing
 import com.fedi.smartparking.ui.theme.White
 
 @Composable
@@ -43,67 +45,95 @@ fun WelcomeScreen(
     onGetStarted: () -> Unit,
     onSignIn: () -> Unit,
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFFF9FCFF), Color(0xFFEAF4FF)),
-                ),
-            )
-            .padding(horizontal = SmartParkingSpacing.screenHorizontal),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Spacer(modifier = Modifier.height(28.dp))
-        EasyParLogo()
-        Spacer(modifier = Modifier.height(24.dp))
-        WelcomeIllustration()
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = stringResource(R.string.auth_welcome_title),
-            style = MaterialTheme.typography.headlineSmall,
-            color = Navy,
-            fontWeight = FontWeight.Bold,
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = stringResource(R.string.auth_welcome_body),
-            modifier = Modifier.fillMaxWidth(),
-            style = MaterialTheme.typography.bodyLarge,
-            color = Navy.copy(alpha = 0.72f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.height(18.dp))
-        OnboardingIndicators()
-        Spacer(modifier = Modifier.weight(1f))
-        SmartButton(
-            text = stringResource(R.string.auth_get_started),
-            onClick = onGetStarted,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onSignIn)
-                .padding(vertical = 18.dp),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = stringResource(R.string.auth_have_account),
-                color = Navy.copy(alpha = 0.72f),
-            )
-            Text(
-                text = " ${stringResource(R.string.auth_sign_in)}",
-                modifier = Modifier
-                    .padding(start = 4.dp)
-                    .then(
-                        Modifier,
+                    listOf(
+                        Color(0xFFEAF5FF),
+                        Color(0xFFFFFFFF),
+                        Color(0xFFE9F5FF),
                     ),
-                color = Emerald,
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold,
+                ),
+            ),
+    ) {
+        SkyDecorations()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 34.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            EasyParLogo()
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.auth_app_tagline),
+                color = Navy,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Medium,
+            )
+            Spacer(modifier = Modifier.height(18.dp))
+            WelcomeCityScene()
+            Spacer(modifier = Modifier.weight(1f))
+            WelcomeActionPanel(
+                onGetStarted = onGetStarted,
+                onSignIn = onSignIn,
             )
         }
+    }
+}
+
+@Composable
+private fun SkyDecorations() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .size(260.dp)
+                .offset(x = (-120).dp, y = (-80).dp)
+                .background(
+                    Color(0xFFDCEEFF).copy(alpha = 0.65f),
+                    CircleShape,
+                ),
+        )
+        Cloud(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = 42.dp, y = 124.dp),
+        )
+        Cloud(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .offset(x = (-34).dp, y = 270.dp),
+        )
+    }
+}
+
+@Composable
+private fun Cloud(modifier: Modifier) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(34.dp)
+                .background(Color(0xFFD5EAFE), CircleShape),
+        )
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .offset(x = (-8).dp)
+                .background(Color(0xFFD5EAFE), CircleShape),
+        )
+        Box(
+            modifier = Modifier
+                .width(72.dp)
+                .height(22.dp)
+                .offset(x = (-18).dp)
+                .background(Color(0xFFD5EAFE), RoundedCornerShape(14.dp)),
+        )
     }
 }
 
@@ -115,40 +145,7 @@ fun EasyParLogo(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 10.dp),
     ) {
-        Box(
-            modifier = Modifier
-                .size(if (compact) 58.dp else 78.dp)
-                .shadow(8.dp, CircleShape)
-                .background(
-                    Brush.linearGradient(listOf(Emerald, PrimaryBlue)),
-                    CircleShape,
-                )
-                .padding(7.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Navy, CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = "P",
-                    color = White,
-                    style = if (compact) {
-                        MaterialTheme.typography.headlineSmall
-                    } else {
-                        MaterialTheme.typography.displaySmall
-                    },
-                    fontWeight = FontWeight.Bold,
-                )
-                IconCarBadge(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(if (compact) 0.dp else 2.dp),
-                )
-            }
-        }
+        ParkingPinLogo(compact = compact)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "Easy",
@@ -156,7 +153,7 @@ fun EasyParLogo(
                 style = if (compact) {
                     MaterialTheme.typography.titleMedium
                 } else {
-                    MaterialTheme.typography.headlineSmall
+                    MaterialTheme.typography.displaySmall
                 },
                 fontWeight = FontWeight.Bold,
             )
@@ -166,99 +163,222 @@ fun EasyParLogo(
                 style = if (compact) {
                     MaterialTheme.typography.titleMedium
                 } else {
-                    MaterialTheme.typography.headlineSmall
+                    MaterialTheme.typography.displaySmall
                 },
                 fontWeight = FontWeight.Bold,
-            )
-        }
-        if (!compact) {
-            Text(
-                text = stringResource(R.string.auth_app_tagline),
-                color = Navy,
-                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }
 }
 
 @Composable
-private fun IconCarBadge(modifier: Modifier) {
-    Surface(
-        modifier = modifier.size(25.dp),
-        color = White,
-        shape = CircleShape,
-        shadowElevation = 2.dp,
+private fun ParkingPinLogo(compact: Boolean) {
+    Box(
+        modifier = Modifier
+            .size(if (compact) 58.dp else 96.dp)
+            .shadow(8.dp, RoundedCornerShape(50.dp, 50.dp, 50.dp, 8.dp))
+            .background(
+                Brush.linearGradient(listOf(Emerald, Color(0xFF08B98A))),
+                RoundedCornerShape(50.dp, 50.dp, 50.dp, 8.dp),
+            )
+            .padding(if (compact) 6.dp else 9.dp),
+        contentAlignment = Alignment.Center,
     ) {
-        androidx.compose.material3.Icon(
-            imageVector = Icons.Default.DirectionsCar,
-            contentDescription = null,
-            tint = Emerald,
-            modifier = Modifier.padding(4.dp),
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Navy, RoundedCornerShape(50.dp, 50.dp, 50.dp, 8.dp)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = "P",
+                color = White,
+                style = if (compact) {
+                    MaterialTheme.typography.headlineSmall
+                } else {
+                    MaterialTheme.typography.displayLarge
+                },
+                fontWeight = FontWeight.Bold,
+            )
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(if (compact) 22.dp else 34.dp),
+                color = White,
+                shape = CircleShape,
+                shadowElevation = 3.dp,
+            ) {
+                androidx.compose.material3.Icon(
+                    imageVector = Icons.Default.DirectionsCar,
+                    contentDescription = null,
+                    tint = Emerald,
+                    modifier = Modifier.padding(if (compact) 4.dp else 6.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun WelcomeCityScene() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(310.dp),
+        contentAlignment = Alignment.BottomCenter,
+    ) {
+        CitySkyline()
+        ParkingSign(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 34.dp, bottom = 54.dp),
+        )
+        BlueCar(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 20.dp),
         )
     }
 }
 
 @Composable
-private fun WelcomeIllustration() {
-    Box(
+private fun CitySkyline() {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(230.dp)
-            .clip(RoundedCornerShape(28.dp))
-            .background(
-                Brush.linearGradient(
-                    listOf(Color(0xFFDCEEFF), Color(0xFFF7FBFF)),
-                ),
-            )
-            .then(Modifier),
-        contentAlignment = Alignment.Center,
+            .height(190.dp)
+            .padding(horizontal = 12.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.Bottom,
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
+        repeat(9) { index ->
+            val height = 72 + (index % 4) * 23
             Box(
                 modifier = Modifier
-                    .size(104.dp)
+                    .width(if (index % 3 == 0) 28.dp else 36.dp)
+                    .height(height.dp)
                     .background(
-                        Brush.linearGradient(listOf(Emerald, PrimaryBlue)),
-                        RoundedCornerShape(52.dp, 52.dp, 52.dp, 8.dp),
+                        Color(0xFFBBDCF9).copy(alpha = 0.62f),
+                        RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
                     ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = "P",
-                    color = White,
-                    style = MaterialTheme.typography.displayLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
-            androidx.compose.material3.Icon(
-                imageVector = Icons.Default.DirectionsCar,
-                contentDescription = null,
-                tint = PrimaryBlue,
-                modifier = Modifier.size(72.dp),
-            )
-            Text(
-                text = stringResource(R.string.auth_welcome_illustration),
-                color = Navy.copy(alpha = 0.7f),
-                style = MaterialTheme.typography.labelLarge,
             )
         }
     }
 }
 
 @Composable
-private fun OnboardingIndicators() {
-    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-        repeat(3) { index ->
-            Box(
-                modifier = Modifier
-                    .size(if (index == 0) 9.dp else 7.dp)
-                    .background(
-                        if (index == 0) PrimaryBlue else LightBorder,
-                        CircleShape,
-                    ),
+private fun ParkingSign(modifier: Modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Surface(
+            modifier = Modifier.size(66.dp),
+            color = PrimaryBlue,
+            shape = RoundedCornerShape(12.dp),
+            shadowElevation = 5.dp,
+        ) {
+            androidx.compose.material3.Icon(
+                imageVector = Icons.Default.LocalParking,
+                contentDescription = null,
+                tint = White,
+                modifier = Modifier.padding(12.dp),
+            )
+        }
+        Box(
+            modifier = Modifier
+                .width(5.dp)
+                .height(58.dp)
+                .background(Navy),
+        )
+    }
+}
+
+@Composable
+private fun BlueCar(modifier: Modifier) {
+    Box(
+        modifier = modifier
+            .width(250.dp)
+            .height(110.dp)
+            .clip(RoundedCornerShape(80.dp, 80.dp, 30.dp, 30.dp))
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color(0xFF2C9BFF), PrimaryBlue),
+                ),
+            )
+            .shadow(8.dp, RoundedCornerShape(80.dp)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(
+            modifier = Modifier
+                .width(130.dp)
+                .height(38.dp)
+                .offset(y = (-28).dp)
+                .clip(RoundedCornerShape(30.dp, 30.dp, 10.dp, 10.dp))
+                .background(Color(0xFF12385C)),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp)
+                .align(Alignment.BottomCenter)
+                .offset(y = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            CarWheel()
+            CarWheel()
+        }
+    }
+}
+
+@Composable
+private fun CarWheel() {
+    Box(
+        modifier = Modifier
+            .size(34.dp)
+            .background(Navy, CircleShape)
+            .padding(7.dp)
+            .background(Color(0xFFB9C9D8), CircleShape),
+    )
+}
+
+@Composable
+private fun WelcomeActionPanel(
+    onGetStarted: () -> Unit,
+    onSignIn: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(topStart = 42.dp, topEnd = 42.dp))
+            .background(
+                Brush.verticalGradient(
+                    listOf(Navy, Color(0xFF0B2540)),
+                ),
+            )
+            .padding(horizontal = 24.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        SmartButton(
+            text = stringResource(R.string.auth_get_started),
+            onClick = onGetStarted,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onSignIn)
+                .padding(top = 16.dp, bottom = 2.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                text = stringResource(R.string.auth_have_account),
+                color = White.copy(alpha = 0.78f),
+            )
+            Text(
+                text = " ${stringResource(R.string.auth_sign_in)}",
+                color = Color(0xFF62E0B9),
+                fontWeight = FontWeight.Bold,
             )
         }
     }
