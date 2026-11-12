@@ -1,5 +1,22 @@
 <resources>
-    <string name="app_name">EasyPar</string>
+    <string name="app_name">SmartParking</string>
+    <string name="home_greeting">Good morning, %1$s</string>
+    <string name="home_subtitle">Find your perfect parking space</string>
+    <string name="home_location">Tunis, Tunisia</string>
+    <string name="home_search_hint">Where do you want to park?</string>
+    <string name="home_nearby_title">Parking near you</string>
+    <string name="home_see_all">See all</string>
+    <string name="home_recommended">Recommended for you</string>
+    <string name="home_available_spaces">%1$d spaces available</string>
+    <string name="home_per_hour">%1$.3f DT / hour</string>
+    <string name="home_distance">%1$.1f km away</string>
+    <string name="home_open_now">Open now</string>
+    <string name="home_map_preview">Nearby parking map</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_bookings">Bookings</string>
+    <string name="nav_profile">Profile</string>
+    <string name="section_coming_soon">This section is coming next</string>
     <string name="theme_preview_title">Smart parking made simple</string>
     <string name="theme_preview_subtitle">Frontend foundation and design system preview</string>
     <string name="status_colors">Status colors</string>
