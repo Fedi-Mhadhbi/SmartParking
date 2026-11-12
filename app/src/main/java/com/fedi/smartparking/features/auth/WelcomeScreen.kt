@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -236,6 +235,20 @@ private fun WelcomeCityScene() {
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
         )
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(76.dp)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            Color.Transparent,
+                            Navy.copy(alpha = 0.26f),
+                        ),
+                    ),
+                ),
+        )
     }
 }
 
@@ -256,20 +269,6 @@ private fun WelcomeActionPanel(
             .padding(horizontal = 24.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(62.dp),
-            color = Emerald,
-            trackColor = PrimaryBlue.copy(alpha = 0.45f),
-            strokeWidth = 9.dp,
-        )
-        Spacer(modifier = Modifier.height(18.dp))
-        Text(
-            text = stringResource(R.string.auth_loading),
-            color = White,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Medium,
-        )
-        Spacer(modifier = Modifier.height(24.dp))
         SmartButton(
             text = stringResource(R.string.auth_get_started),
             onClick = onGetStarted,

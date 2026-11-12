@@ -22,7 +22,6 @@
     <string name="auth_welcome_body">Découvrez les parkings disponibles près de vous et réservez votre place en quelques secondes.</string>
     <string name="auth_welcome_illustration">Votre parking, simplement.</string>
     <string name="auth_welcome_car_content_description">Blue car parked in the city</string>
-    <string name="auth_loading">Chargement…</string>
     <string name="auth_get_started">Commencer</string>
     <string name="auth_have_account">J’ai déjà un compte</string>
     <string name="auth_sign_in">Se connecter</string>
