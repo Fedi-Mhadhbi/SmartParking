@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.LocalParking
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -33,6 +32,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 import com.fedi.smartparking.R
 import com.fedi.smartparking.ui.components.SmartButton
 import com.fedi.smartparking.ui.theme.Emerald
@@ -200,21 +202,6 @@ private fun ParkingPinLogo(compact: Boolean) {
                 },
                 fontWeight = FontWeight.Bold,
             )
-            Surface(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(if (compact) 22.dp else 34.dp),
-                color = White,
-                shape = CircleShape,
-                shadowElevation = 3.dp,
-            ) {
-                androidx.compose.material3.Icon(
-                    imageVector = Icons.Default.DirectionsCar,
-                    contentDescription = null,
-                    tint = Emerald,
-                    modifier = Modifier.padding(if (compact) 4.dp else 6.dp),
-                )
-            }
         }
     }
 }
@@ -233,10 +220,10 @@ private fun WelcomeCityScene() {
                 .align(Alignment.CenterEnd)
                 .padding(end = 34.dp, bottom = 54.dp),
         )
-        BlueCar(
+        RealCarImage(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp),
+                .padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
         )
     }
 }
@@ -295,171 +282,21 @@ private fun ParkingSign(modifier: Modifier) {
 }
 
 @Composable
-private fun BlueCar(modifier: Modifier) {
+private fun RealCarImage(modifier: Modifier) {
     Box(
         modifier = modifier
-            .width(278.dp)
-            .height(142.dp),
+            .fillMaxWidth()
+            .height(205.dp)
+            .clip(RoundedCornerShape(28.dp)),
+        contentAlignment = Alignment.BottomCenter,
     ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(76.dp)
-                .clip(RoundedCornerShape(30.dp, 30.dp, 18.dp, 18.dp))
-                .background(
-                    Brush.verticalGradient(
-                        listOf(Color(0xFF238DF2), PrimaryBlue, Color(0xFF023AAB)),
-                    ),
-                )
-                .shadow(10.dp, RoundedCornerShape(30.dp)),
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .width(148.dp)
-                .height(58.dp)
-                .clip(RoundedCornerShape(62.dp, 62.dp, 12.dp, 12.dp))
-                .background(
-                    Brush.linearGradient(
-                        listOf(Color(0xFF1E5F93), Color(0xFF071F3D)),
-                    ),
-                ),
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset(y = 7.dp)
-                .width(112.dp)
-                .height(35.dp)
-                .clip(RoundedCornerShape(40.dp, 40.dp, 8.dp, 8.dp))
-                .background(Color(0xFFBDE8FF).copy(alpha = 0.88f)),
-        )
-        Row(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset(y = 9.dp)
-                .width(105.dp)
-                .height(29.dp),
-            horizontalArrangement = Arrangement.spacedBy(3.dp),
-        ) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(20.dp, 4.dp, 4.dp, 4.dp))
-                    .background(Color(0xFF194B73)),
-            )
-            Box(
-                modifier = Modifier
-                    .weight(1.2f)
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(Color(0xFF2B79A7)),
-            )
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(4.dp, 20.dp, 4.dp, 4.dp))
-                    .background(Color(0xFF194B73)),
-            )
-        }
-        CarHeadlight(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .offset(x = 14.dp, y = 12.dp),
-        )
-        CarHeadlight(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .offset(x = (-14).dp, y = 12.dp),
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .offset(y = 27.dp)
-                .width(92.dp)
-                .height(15.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xFF061A30)),
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 10.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                repeat(5) {
-                    Box(
-                        modifier = Modifier
-                            .width(2.dp)
-                            .height(8.dp)
-                            .background(Color(0xFF58748D), RoundedCornerShape(2.dp)),
-                    )
-                }
-            }
-        }
-        Surface(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .offset(y = 27.dp)
-                .size(20.dp),
-            color = White,
-            shape = CircleShape,
-        ) {
-            Text(
-                text = "P",
-                color = PrimaryBlue,
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(horizontal = 32.dp)
-                .offset(y = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            CarWheel()
-            CarWheel()
-        }
-    }
-}
-
-@Composable
-private fun CarWheel() {
-    Box(
-        modifier = Modifier
-            .size(44.dp)
-            .background(Navy, CircleShape)
-            .padding(5.dp)
-            .background(Color(0xFF6D8192), CircleShape)
-            .padding(5.dp)
-            .background(Color(0xFFD8E1E8), CircleShape),
-    ) {
-        Box(
-            modifier = Modifier
-                .size(7.dp)
-                .align(Alignment.Center)
-                .background(Navy, CircleShape),
+        Image(
+            painter = painterResource(R.drawable.welcome_car),
+            contentDescription = stringResource(R.string.auth_welcome_car_content_description),
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
         )
     }
-}
-
-@Composable
-private fun CarHeadlight(modifier: Modifier) {
-    Box(
-        modifier = modifier
-            .width(32.dp)
-            .height(14.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFFECFCFF)),
-    )
 }
 
 @Composable
