@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">EasyPar</string>
+    <string name="theme_preview_title">Smart parking made simple</string>
+    <string name="theme_preview_subtitle">Frontend foundation and design system preview</string>
+    <string name="status_colors">Status colors</string>
+    <string name="primary_action">Find a parking space</string>
+    <string name="available">Available</string>
+    <string name="reserved">Reserved</string>
+    <string name="occupied">Occupied</string>
+    <string name="error">Error</string>
+</resources>
