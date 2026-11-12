@@ -1,14 +1,17 @@
 package com.fedi.smartparking.features.auth
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -21,15 +24,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
 import com.fedi.smartparking.ui.components.SmartButton
 import com.fedi.smartparking.ui.components.SmartTextField
+import com.fedi.smartparking.ui.theme.Emerald
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
 import com.fedi.smartparking.ui.theme.SmartParkingSpacing
@@ -62,7 +68,11 @@ fun LoginScreen(
             onValueChange = { password = it },
             label = stringResource(R.string.auth_password),
             leadingIcon = Icons.Default.Lock,
-            trailingIcon = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+            trailingIcon = if (passwordVisible) {
+                Icons.Default.VisibilityOff
+            } else {
+                Icons.Default.Visibility
+            },
             onTrailingIconClick = { passwordVisible = !passwordVisible },
             visualTransformation = if (passwordVisible) {
                 VisualTransformation.None
@@ -75,8 +85,10 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onForgotPassword),
-            color = PrimaryBlue,
+            color = Emerald,
             style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = androidx.compose.ui.text.style.TextAlign.End,
         )
         SmartButton(
             text = stringResource(R.string.auth_continue),
@@ -99,22 +111,36 @@ fun AuthFormLayout(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = SmartParkingSpacing.screenHorizontal),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+            .background(Color(0xFFF9FCFF))
+            .imePadding()
+            .verticalScroll(rememberScrollState())
+            .padding(
+                horizontal = SmartParkingSpacing.screenHorizontal,
+                vertical = 24.dp,
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        Spacer(modifier = Modifier.height(28.dp))
+        EasyParLogo(compact = true)
+        Spacer(modifier = Modifier.padding(2.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.displaySmall,
+            style = MaterialTheme.typography.headlineSmall,
             color = Navy,
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = body,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Navy.copy(alpha = 0.68f),
         )
-        Spacer(modifier = Modifier.height(12.dp))
-        content()
+        Spacer(modifier = Modifier.padding(3.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(13.dp),
+        ) {
+            content()
+        }
     }
 }
 
@@ -131,11 +157,12 @@ fun AuthFooter(
             .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
-        Text(text = prompt, color = Color.Gray)
+        Text(text = prompt, color = Navy.copy(alpha = 0.7f))
         Text(
             text = " $action",
-            color = PrimaryBlue,
+            color = Emerald,
             style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
         )
     }
 }

@@ -9,6 +9,8 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,10 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
 import com.fedi.smartparking.ui.components.SmartButton
 import com.fedi.smartparking.ui.components.SmartTextField
+import com.fedi.smartparking.ui.theme.Emerald
 
 @Composable
 fun RegisterScreen(
@@ -36,6 +40,8 @@ fun RegisterScreen(
     var phone by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
     var acceptedTerms by rememberSaveable { mutableStateOf(false) }
 
     AuthFormLayout(
@@ -54,28 +60,57 @@ fun RegisterScreen(
                 onValueChange = { email = it },
                 label = stringResource(R.string.auth_email),
                 leadingIcon = Icons.Default.Email,
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                    keyboardType = androidx.compose.ui.text.input.KeyboardType.Email,
+                ),
             )
             SmartTextField(
                 value = phone,
                 onValueChange = { phone = it },
                 label = stringResource(R.string.auth_phone),
                 leadingIcon = Icons.Default.Phone,
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                    keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
+                ),
             )
             SmartTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = stringResource(R.string.auth_password),
                 leadingIcon = Icons.Default.Lock,
-                visualTransformation = PasswordVisualTransformation(),
+                trailingIcon = if (passwordVisible) {
+                    Icons.Default.VisibilityOff
+                } else {
+                    Icons.Default.Visibility
+                },
+                onTrailingIconClick = { passwordVisible = !passwordVisible },
+                visualTransformation = if (passwordVisible) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
             )
             SmartTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
                 label = stringResource(R.string.auth_confirm_password),
                 leadingIcon = Icons.Default.Lock,
-                visualTransformation = PasswordVisualTransformation(),
+                trailingIcon = if (confirmPasswordVisible) {
+                    Icons.Default.VisibilityOff
+                } else {
+                    Icons.Default.Visibility
+                },
+                onTrailingIconClick = {
+                    confirmPasswordVisible = !confirmPasswordVisible
+                },
+                visualTransformation = if (confirmPasswordVisible) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
             )
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
