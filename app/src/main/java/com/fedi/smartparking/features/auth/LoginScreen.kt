@@ -125,7 +125,10 @@ fun AuthFooter(
     onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
         Text(text = prompt, color = Color.Gray)

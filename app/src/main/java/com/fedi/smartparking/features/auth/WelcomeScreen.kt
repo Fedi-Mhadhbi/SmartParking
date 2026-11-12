@@ -93,6 +93,7 @@ fun WelcomeScreen(
             androidx.compose.foundation.layout.Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable(onClick = onSignIn)
                     .padding(vertical = 6.dp),
                 horizontalArrangement = Arrangement.Center,
             ) {
@@ -102,7 +103,6 @@ fun WelcomeScreen(
                 )
                 Text(
                     text = " ${stringResource(R.string.auth_sign_in)}",
-                    modifier = Modifier.clickable(onClick = onSignIn),
                     color = PrimaryBlue,
                     style = MaterialTheme.typography.labelLarge,
                 )
