@@ -293,8 +293,10 @@ private fun RealCarImage(modifier: Modifier) {
         Image(
             painter = painterResource(R.drawable.welcome_car),
             contentDescription = stringResource(R.string.auth_welcome_car_content_description),
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(205.dp),
+            contentScale = ContentScale.Fit,
         )
     }
 }
