@@ -17,7 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocalParking
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -202,6 +203,21 @@ private fun ParkingPinLogo(compact: Boolean) {
                 },
                 fontWeight = FontWeight.Bold,
             )
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(if (compact) 22.dp else 34.dp),
+                color = White,
+                shape = CircleShape,
+                shadowElevation = 3.dp,
+            ) {
+                androidx.compose.material3.Icon(
+                    imageVector = Icons.Default.DirectionsCar,
+                    contentDescription = null,
+                    tint = Emerald,
+                    modifier = Modifier.padding(if (compact) 4.dp else 6.dp),
+                )
+            }
         }
     }
 }
@@ -211,92 +227,14 @@ private fun WelcomeCityScene() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(310.dp),
-        contentAlignment = Alignment.BottomCenter,
-    ) {
-        CitySkyline()
-        ParkingSign(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 34.dp, bottom = 54.dp),
-        )
-        RealCarImage(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
-        )
-    }
-}
-
-@Composable
-private fun CitySkyline() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(190.dp)
-            .padding(horizontal = 12.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom,
-    ) {
-        repeat(9) { index ->
-            val height = 72 + (index % 4) * 23
-            Box(
-                modifier = Modifier
-                    .width(if (index % 3 == 0) 28.dp else 36.dp)
-                    .height(height.dp)
-                    .background(
-                        Color(0xFFBBDCF9).copy(alpha = 0.62f),
-                        RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
-                    ),
-            )
-        }
-    }
-}
-
-@Composable
-private fun ParkingSign(modifier: Modifier) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Surface(
-            modifier = Modifier.size(66.dp),
-            color = PrimaryBlue,
-            shape = RoundedCornerShape(12.dp),
-            shadowElevation = 5.dp,
-        ) {
-            androidx.compose.material3.Icon(
-                imageVector = Icons.Default.LocalParking,
-                contentDescription = null,
-                tint = White,
-                modifier = Modifier.padding(12.dp),
-            )
-        }
-        Box(
-            modifier = Modifier
-                .width(5.dp)
-                .height(58.dp)
-                .background(Navy),
-        )
-    }
-}
-
-@Composable
-private fun RealCarImage(modifier: Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(205.dp)
-            .clip(RoundedCornerShape(28.dp)),
+            .height(410.dp),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Image(
             painter = painterResource(R.drawable.welcome_car),
             contentDescription = stringResource(R.string.auth_welcome_car_content_description),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(205.dp),
-            contentScale = ContentScale.Fit,
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
         )
     }
 }
@@ -318,6 +256,20 @@ private fun WelcomeActionPanel(
             .padding(horizontal = 24.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(62.dp),
+            color = Emerald,
+            trackColor = PrimaryBlue.copy(alpha = 0.45f),
+            strokeWidth = 9.dp,
+        )
+        Spacer(modifier = Modifier.height(18.dp))
+        Text(
+            text = stringResource(R.string.auth_loading),
+            color = White,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Medium,
+        )
+        Spacer(modifier = Modifier.height(24.dp))
         SmartButton(
             text = stringResource(R.string.auth_get_started),
             onClick = onGetStarted,
