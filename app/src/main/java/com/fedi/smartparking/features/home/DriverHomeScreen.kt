@@ -56,6 +56,7 @@ import com.fedi.smartparking.ui.theme.SmartParkingSpacing
 @Composable
 fun DriverHomeScreen(
     onParkingClick: (ParkingCardUiModel) -> Unit,
+    onNotificationsClick: () -> Unit = {},
     homeViewModel: HomeViewModel = viewModel(),
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
@@ -75,6 +76,7 @@ fun DriverHomeScreen(
             HomeHeader(
                 userName = uiState.userName,
                 location = uiState.location,
+                onNotificationsClick = onNotificationsClick,
             )
             SearchField(
                 query = uiState.searchQuery,
@@ -110,6 +112,7 @@ fun DriverHomeScreen(
 private fun HomeHeader(
     userName: String,
     location: String,
+    onNotificationsClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -143,7 +146,7 @@ private fun HomeHeader(
             }
         }
         IconButton(
-            onClick = {},
+            onClick = onNotificationsClick,
             modifier = Modifier
                 .size(46.dp)
                 .background(Color.White, CircleShape)

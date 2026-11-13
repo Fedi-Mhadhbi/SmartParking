@@ -28,6 +28,7 @@ import com.fedi.smartparking.features.bookings.BookingsScreen
 import com.fedi.smartparking.features.bookings.BookingDetailsScreen
 import com.fedi.smartparking.features.profile.ProfileScreen
 import com.fedi.smartparking.features.profile.VehiclesScreen
+import com.fedi.smartparking.features.notifications.NotificationsScreen
 
 @Composable
 fun AppNavigation() {
@@ -64,7 +65,11 @@ fun AppNavigation() {
             composable(NavRoutes.HOME) {
                 DriverHomeScreen(
                     onParkingClick = { navController.navigate(NavRoutes.EXPLORE) },
+                    onNotificationsClick = { navController.navigate(NavRoutes.NOTIFICATIONS) },
                 )
+            }
+            composable(NavRoutes.NOTIFICATIONS) {
+                NotificationsScreen(onBack = { navController.popBackStack() })
             }
             composable(NavRoutes.EXPLORE) {
                 ExploreScreen(

@@ -77,6 +77,17 @@
     <string name="vehicles_add">Add a vehicle</string>
     <string name="vehicles_default_name">Blue sedan</string>
     <string name="vehicles_default_plate">123 TUN 4567</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_subtitle">Stay up to date with your reservations.</string>
+    <string name="notification_booking_confirmed_title">Reservation confirmed</string>
+    <string name="notification_booking_confirmed_message">Your parking reservation is ready.</string>
+    <string name="notification_reminder_title">Parking reminder</string>
+    <string name="notification_reminder_message">Your reservation starts soon.</string>
+    <string name="notification_welcome_title">Welcome to EasyPar</string>
+    <string name="notification_welcome_message">Find and reserve parking spaces easily.</string>
+    <string name="notification_today">Today</string>
+    <string name="notification_yesterday">Yesterday</string>
+    <string name="notification_last_week">Last week</string>
     <string name="auth_app_tagline">Trouvez. Réservez. Garez-vous.</string>
     <string name="auth_welcome_title">Trouvez votre place de parking facilement</string>
     <string name="auth_welcome_body">Découvrez les parkings disponibles près de vous et réservez votre place en quelques secondes.</string>
