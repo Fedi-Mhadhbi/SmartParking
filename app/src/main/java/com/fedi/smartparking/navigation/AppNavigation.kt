@@ -27,7 +27,6 @@ import com.fedi.smartparking.features.reservation.BookingSuccessScreen
 import com.fedi.smartparking.features.bookings.BookingsScreen
 import com.fedi.smartparking.features.bookings.BookingDetailsScreen
 import com.fedi.smartparking.features.profile.ProfileScreen
-import com.fedi.smartparking.features.profile.VehiclesScreen
 import com.fedi.smartparking.features.notifications.NotificationsScreen
 import com.fedi.smartparking.features.support.HelpSupportScreen
 
@@ -154,12 +153,8 @@ fun AppNavigation() {
             }
             composable(NavRoutes.PROFILE) {
                 ProfileScreen(
-                    onVehiclesClick = { navController.navigate(NavRoutes.VEHICLES) },
                     onHelpClick = { navController.navigate(NavRoutes.HELP) },
                 )
-            }
-            composable(NavRoutes.VEHICLES) {
-                VehiclesScreen(onBack = { navController.popBackStack() })
             }
             composable(NavRoutes.HELP) {
                 HelpSupportScreen(onBack = { navController.popBackStack() })

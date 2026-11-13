@@ -10,7 +10,6 @@ object NavRoutes {
     const val BOOKING_CONFIRMATION = "booking_confirmation/{parkingName}"
     const val BOOKING_SUCCESS = "booking_success/{parkingName}"
     const val BOOKING_DETAILS = "booking_details/{parkingName}"
-    const val VEHICLES = "vehicles"
     const val NOTIFICATIONS = "notifications"
     const val HELP = "help"
 
