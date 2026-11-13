@@ -76,8 +76,6 @@
     <string name="reservation_select_date">Sélectionner une date</string>
     <string name="reservation_select">Sélectionner</string>
     <string name="reservation_cancel">Annuler</string>
-    <string name="reservation_vehicle">Véhicule</string>
-    <string name="reservation_default_vehicle">Véhicule par défaut</string>
     <string name="reservation_duration">Durée du stationnement</string>
     <string name="reservation_hours">%1$d heure(s)</string>
     <string name="reservation_total">Total estimé</string>
@@ -106,6 +104,10 @@
     <string name="booking_details_location">Lieu du parking</string>
     <string name="booking_details_show_qr">Afficher le QR code</string>
     <string name="profile_title">Profil</string>
+    <string name="profile_bookings">Mes réservations</string>
+    <string name="profile_bookings_subtitle">Consultez vos réservations à venir et passées.</string>
+    <string name="profile_notifications">Notifications</string>
+    <string name="profile_notifications_subtitle">Restez informé de vos réservations.</string>
     <string name="profile_help">Aide et assistance</string>
     <string name="profile_help_subtitle">Obtenez de l’aide sur les parkings et réservations.</string>
     <string name="support_title">Aide et assistance</string>

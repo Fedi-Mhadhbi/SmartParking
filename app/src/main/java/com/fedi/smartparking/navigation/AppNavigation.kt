@@ -148,12 +148,18 @@ fun AppNavigation() {
                 BookingDetailsScreen(
                     parkingName = entry.arguments?.getString("parkingName").orEmpty(),
                     onBack = { navController.popBackStack() },
-                    onShowQr = {},
+                    onShowQr = {
+                        navController.navigate(
+                            NavRoutes.bookingSuccess(entry.arguments?.getString("parkingName").orEmpty()),
+                        )
+                    },
                 )
             }
             composable(NavRoutes.PROFILE) {
                 ProfileScreen(
                     onHelpClick = { navController.navigate(NavRoutes.HELP) },
+                    onBookingsClick = { navController.navigate(NavRoutes.BOOKINGS) },
+                    onNotificationsClick = { navController.navigate(NavRoutes.NOTIFICATIONS) },
                 )
             }
             composable(NavRoutes.HELP) {

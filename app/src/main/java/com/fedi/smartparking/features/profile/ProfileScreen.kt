@@ -13,7 +13,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.HelpOutline
+import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +35,8 @@ import com.fedi.smartparking.ui.theme.PrimaryBlue
 @Composable
 fun ProfileScreen(
     onHelpClick: () -> Unit,
+    onBookingsClick: () -> Unit,
+    onNotificationsClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -78,6 +82,18 @@ fun ProfileScreen(
                 }
             }
         }
+        ProfileOption(
+            icon = Icons.Default.CalendarMonth,
+            title = stringResource(R.string.profile_bookings),
+            subtitle = stringResource(R.string.profile_bookings_subtitle),
+            onClick = onBookingsClick,
+        )
+        ProfileOption(
+            icon = Icons.Default.NotificationsNone,
+            title = stringResource(R.string.profile_notifications),
+            subtitle = stringResource(R.string.profile_notifications_subtitle),
+            onClick = onNotificationsClick,
+        )
         ProfileOption(
             icon = Icons.Default.HelpOutline,
             title = stringResource(R.string.profile_help),

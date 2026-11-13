@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Add
@@ -120,13 +119,6 @@ fun ReservationScreen(
             value = selectedDate,
             onClick = { showDatePicker = true },
         )
-        ReservationField(
-            icon = Icons.Default.DirectionsCar,
-            label = stringResource(R.string.reservation_vehicle),
-            value = stringResource(R.string.reservation_default_vehicle),
-            onClick = {},
-        )
-
         Text(
             text = stringResource(R.string.reservation_duration),
             style = MaterialTheme.typography.titleMedium,

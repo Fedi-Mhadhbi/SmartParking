@@ -76,8 +76,6 @@
     <string name="reservation_select_date">اختر تاريخاً</string>
     <string name="reservation_select">اختيار</string>
     <string name="reservation_cancel">إلغاء</string>
-    <string name="reservation_vehicle">السيارة</string>
-    <string name="reservation_default_vehicle">السيارة الافتراضية</string>
     <string name="reservation_duration">مدة الوقوف</string>
     <string name="reservation_hours">%1$d ساعة</string>
     <string name="reservation_total">المجموع التقديري</string>
@@ -106,6 +104,10 @@
     <string name="booking_details_location">موقع الموقف</string>
     <string name="booking_details_show_qr">إظهار رمز QR</string>
     <string name="profile_title">الملف الشخصي</string>
+    <string name="profile_bookings">حجوزاتي</string>
+    <string name="profile_bookings_subtitle">راجع حجوزاتك القادمة والسابقة.</string>
+    <string name="profile_notifications">الإشعارات</string>
+    <string name="profile_notifications_subtitle">ابق على اطلاع بحجوزاتك.</string>
     <string name="profile_help">المساعدة والدعم</string>
     <string name="profile_help_subtitle">احصل على إجابات حول المواقف والحجوزات.</string>
     <string name="support_title">المساعدة والدعم</string>

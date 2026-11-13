@@ -42,8 +42,6 @@
     <string name="reservation_select_date">Select a date</string>
     <string name="reservation_select">Select</string>
     <string name="reservation_cancel">Cancel</string>
-    <string name="reservation_vehicle">Vehicle</string>
-    <string name="reservation_default_vehicle">My blue sedan</string>
     <string name="reservation_duration">Parking duration</string>
     <string name="reservation_hours">%1$d hour(s)</string>
     <string name="reservation_total">Estimated total</string>
@@ -72,6 +70,10 @@
     <string name="booking_details_location">Parking location</string>
     <string name="booking_details_show_qr">Show QR code</string>
     <string name="profile_title">Profile</string>
+    <string name="profile_bookings">My reservations</string>
+    <string name="profile_bookings_subtitle">Review your upcoming and past bookings.</string>
+    <string name="profile_notifications">Notifications</string>
+    <string name="profile_notifications_subtitle">Stay updated about your reservations.</string>
     <string name="profile_help">Help &amp; support</string>
     <string name="profile_help_subtitle">Get answers about parking and reservations.</string>
     <string name="support_title">Help &amp; support</string>
