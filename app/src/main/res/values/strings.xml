@@ -17,6 +17,17 @@
     <string name="nav_bookings">Bookings</string>
     <string name="nav_profile">Profile</string>
     <string name="section_coming_soon">This section is coming next</string>
+    <string name="explore_title">Explore parking</string>
+    <string name="explore_subtitle">Find a space near your destination</string>
+    <string name="explore_back">Back</string>
+    <string name="explore_search_hint">Search by area or parking name</string>
+    <string name="explore_map_label">Nearby parking</string>
+    <string name="explore_filter_nearby">Nearby</string>
+    <string name="explore_filter_price">Lowest price</string>
+    <string name="explore_filter_available">Available now</string>
+    <string name="explore_results">Parking spaces near you</string>
+    <string name="explore_spaces">%1$d spaces available</string>
+    <string name="explore_empty">No parking matches your search.</string>
     <string name="auth_app_tagline">Trouvez. Réservez. Garez-vous.</string>
     <string name="auth_welcome_title">Trouvez votre place de parking facilement</string>
     <string name="auth_welcome_body">Découvrez les parkings disponibles près de vous et réservez votre place en quelques secondes.</string>

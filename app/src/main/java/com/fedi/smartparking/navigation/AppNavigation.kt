@@ -17,6 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fedi.smartparking.R
 import com.fedi.smartparking.features.home.DriverHomeScreen
+import com.fedi.smartparking.features.explore.ExploreScreen
 
 @Composable
 fun AppNavigation() {
@@ -55,7 +56,9 @@ fun AppNavigation() {
                     onParkingClick = { navController.navigate(NavRoutes.EXPLORE) },
                 )
             }
-            composable(NavRoutes.EXPLORE) { SectionPlaceholder() }
+            composable(NavRoutes.EXPLORE) {
+                ExploreScreen(onBack = { navController.popBackStack() })
+            }
             composable(NavRoutes.BOOKINGS) { SectionPlaceholder() }
             composable(NavRoutes.PROFILE) { SectionPlaceholder() }
         }
