@@ -28,6 +28,14 @@
     <string name="explore_results">Parking spaces near you</string>
     <string name="explore_spaces">%1$d spaces available</string>
     <string name="explore_empty">No parking matches your search.</string>
+    <string name="parking_open_now">Open now</string>
+    <string name="parking_price_label">per hour</string>
+    <string name="parking_spaces_label">spaces free</string>
+    <string name="parking_distance_label">distance</string>
+    <string name="parking_amenities">Amenities</string>
+    <string name="parking_secure">Secure parking</string>
+    <string name="parking_accessible">Accessible</string>
+    <string name="parking_reserve">Choose this parking</string>
     <string name="auth_app_tagline">Trouvez. Réservez. Garez-vous.</string>
     <string name="auth_welcome_title">Trouvez votre place de parking facilement</string>
     <string name="auth_welcome_body">Découvrez les parkings disponibles près de vous et réservez votre place en quelques secondes.</string>

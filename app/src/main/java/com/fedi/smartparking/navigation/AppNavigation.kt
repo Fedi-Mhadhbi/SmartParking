@@ -13,11 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fedi.smartparking.R
 import com.fedi.smartparking.features.home.DriverHomeScreen
 import com.fedi.smartparking.features.explore.ExploreScreen
+import com.fedi.smartparking.features.parking.ParkingDetailsScreen
 
 @Composable
 fun AppNavigation() {
@@ -57,7 +60,22 @@ fun AppNavigation() {
                 )
             }
             composable(NavRoutes.EXPLORE) {
-                ExploreScreen(onBack = { navController.popBackStack() })
+                ExploreScreen(
+                    onBack = { navController.popBackStack() },
+                    onParkingClick = { parking ->
+                        navController.navigate(NavRoutes.parkingDetails(parking.name))
+                    },
+                )
+            }
+            composable(
+                route = NavRoutes.PARKING_DETAILS,
+                arguments = listOf(navArgument("parkingName") { type = NavType.StringType }),
+            ) { entry ->
+                ParkingDetailsScreen(
+                    parkingName = entry.arguments?.getString("parkingName").orEmpty(),
+                    onBack = { navController.popBackStack() },
+                    onReserve = {},
+                )
             }
             composable(NavRoutes.BOOKINGS) { SectionPlaceholder() }
             composable(NavRoutes.PROFILE) { SectionPlaceholder() }
