@@ -9,6 +9,7 @@ object NavRoutes {
     const val RESERVATION = "reservation/{parkingName}"
     const val BOOKING_CONFIRMATION = "booking_confirmation/{parkingName}"
     const val BOOKING_SUCCESS = "booking_success/{parkingName}"
+    const val BOOKING_DETAILS = "booking_details/{parkingName}"
 
     fun parkingDetails(parkingName: String): String =
         "parking_details/${android.net.Uri.encode(parkingName)}"
@@ -21,4 +22,7 @@ object NavRoutes {
 
     fun bookingSuccess(parkingName: String): String =
         "booking_success/${android.net.Uri.encode(parkingName)}"
+
+    fun bookingDetails(parkingName: String): String =
+        "booking_details/${android.net.Uri.encode(parkingName)}"
 }
