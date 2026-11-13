@@ -24,6 +24,7 @@ import com.fedi.smartparking.features.parking.ParkingDetailsScreen
 import com.fedi.smartparking.features.reservation.ReservationScreen
 import com.fedi.smartparking.features.reservation.BookingConfirmationScreen
 import com.fedi.smartparking.features.reservation.BookingSuccessScreen
+import com.fedi.smartparking.features.bookings.BookingsScreen
 
 @Composable
 fun AppNavigation() {
@@ -125,7 +126,7 @@ fun AppNavigation() {
                     },
                 )
             }
-            composable(NavRoutes.BOOKINGS) { SectionPlaceholder() }
+            composable(NavRoutes.BOOKINGS) { BookingsScreen() }
             composable(NavRoutes.PROFILE) { SectionPlaceholder() }
         }
     }
