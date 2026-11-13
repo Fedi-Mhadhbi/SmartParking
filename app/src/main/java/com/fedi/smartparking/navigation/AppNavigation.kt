@@ -22,6 +22,7 @@ import com.fedi.smartparking.features.home.DriverHomeScreen
 import com.fedi.smartparking.features.explore.ExploreScreen
 import com.fedi.smartparking.features.parking.ParkingDetailsScreen
 import com.fedi.smartparking.features.reservation.ReservationScreen
+import com.fedi.smartparking.features.reservation.BookingConfirmationScreen
 
 @Composable
 fun AppNavigation() {
@@ -87,6 +88,20 @@ fun AppNavigation() {
                 arguments = listOf(navArgument("parkingName") { type = NavType.StringType }),
             ) { entry ->
                 ReservationScreen(
+                    parkingName = entry.arguments?.getString("parkingName").orEmpty(),
+                    onBack = { navController.popBackStack() },
+                    onConfirm = {
+                        navController.navigate(
+                            NavRoutes.bookingConfirmation(entry.arguments?.getString("parkingName").orEmpty()),
+                        )
+                    },
+                )
+            }
+            composable(
+                route = NavRoutes.BOOKING_CONFIRMATION,
+                arguments = listOf(navArgument("parkingName") { type = NavType.StringType }),
+            ) { entry ->
+                BookingConfirmationScreen(
                     parkingName = entry.arguments?.getString("parkingName").orEmpty(),
                     onBack = { navController.popBackStack() },
                     onConfirm = { navController.popBackStack() },

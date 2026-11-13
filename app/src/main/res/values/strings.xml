@@ -48,6 +48,14 @@
     <string name="reservation_hours">%1$d hour(s)</string>
     <string name="reservation_total">Estimated total</string>
     <string name="reservation_confirm">Continue to confirmation</string>
+    <string name="confirmation_title">Review booking</string>
+    <string name="confirmation_ready">Your booking is almost ready</string>
+    <string name="confirmation_review">Check the details before confirming.</string>
+    <string name="confirmation_parking">Parking</string>
+    <string name="confirmation_date">Date</string>
+    <string name="confirmation_duration">Duration</string>
+    <string name="confirmation_total">Total</string>
+    <string name="confirmation_confirm">Confirm reservation</string>
     <string name="auth_app_tagline">Trouvez. Réservez. Garez-vous.</string>
     <string name="auth_welcome_title">Trouvez votre place de parking facilement</string>
     <string name="auth_welcome_body">Découvrez les parkings disponibles près de vous et réservez votre place en quelques secondes.</string>
