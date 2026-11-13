@@ -56,6 +56,10 @@
     <string name="confirmation_duration">Duration</string>
     <string name="confirmation_total">Total</string>
     <string name="confirmation_confirm">Confirm reservation</string>
+    <string name="success_title">Reservation confirmed</string>
+    <string name="success_subtitle">Show this QR code when you arrive.</string>
+    <string name="success_reference">Reservation reference</string>
+    <string name="success_done">Back to home</string>
     <string name="auth_app_tagline">Trouvez. Réservez. Garez-vous.</string>
     <string name="auth_welcome_title">Trouvez votre place de parking facilement</string>
     <string name="auth_welcome_body">Découvrez les parkings disponibles près de vous et réservez votre place en quelques secondes.</string>
