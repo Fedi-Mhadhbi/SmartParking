@@ -60,6 +60,7 @@
     <string name="success_subtitle">Show this QR code when you arrive.</string>
     <string name="success_reference">Reservation reference</string>
     <string name="success_done">Back to home</string>
+    <string name="success_qr_description">Scannable reservation QR code</string>
     <string name="bookings_title">My reservations</string>
     <string name="bookings_subtitle">Keep track of your parking bookings.</string>
     <string name="bookings_upcoming">Upcoming</string>

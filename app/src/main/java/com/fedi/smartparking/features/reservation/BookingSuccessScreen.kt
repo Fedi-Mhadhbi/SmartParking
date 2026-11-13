@@ -1,10 +1,10 @@
 package com.fedi.smartparking.features.reservation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,15 +18,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.qrcode.QRCodeWriter
+import android.graphics.Bitmap
 
 @Composable
 fun BookingSuccessScreen(
@@ -96,44 +101,31 @@ fun BookingSuccessScreen(
 
 @Composable
 private fun QrPreview(modifier: Modifier = Modifier) {
-    val pattern = listOf(
-        "1111111001011111111",
-        "1000001011011000001",
-        "1011101000011011101",
-        "1011101011011011101",
-        "1011101001011011101",
-        "1000001010011000001",
-        "1111111010101111111",
-        "0000000011010000000",
-        "1010111110011011011",
-        "0110010011110100100",
-        "1101111010011110111",
-        "0000000011010000000",
-        "1111111011011111111",
-        "1000001000011000001",
-        "1011101011011011101",
-        "1011101001011011101",
-        "1011101010011011101",
-        "1000001011011000001",
-        "1111111010011111111",
-    )
-    Column(
+    val qrBitmap = remember {
+        QRCodeWriter()
+            .encode("SP-2026-00124", BarcodeFormat.QR_CODE, 420, 420)
+            .toBitmap()
+    }
+    Image(
+        bitmap = qrBitmap.asImageBitmap(),
+        contentDescription = stringResource(R.string.success_qr_description),
         modifier = modifier
             .size(190.dp)
             .background(Color.White, RoundedCornerShape(14.dp))
             .padding(14.dp),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        pattern.forEach { row ->
-            Row {
-                row.forEach { cell ->
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(if (cell == '1') Color.Black else Color.White),
-                    )
-                }
-            }
+    )
+}
+
+private fun com.google.zxing.common.BitMatrix.toBitmap(): Bitmap {
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    for (x in 0 until width) {
+        for (y in 0 until height) {
+            bitmap.setPixel(
+                x,
+                y,
+                if (get(x, y)) android.graphics.Color.BLACK else android.graphics.Color.WHITE,
+            )
         }
     }
+    return bitmap
 }
