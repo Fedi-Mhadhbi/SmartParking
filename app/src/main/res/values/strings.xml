@@ -70,6 +70,13 @@
     <string name="booking_details_reference">Reservation reference</string>
     <string name="booking_details_location">Parking location</string>
     <string name="booking_details_show_qr">Show QR code</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_vehicles">My vehicles</string>
+    <string name="profile_vehicles_subtitle">Manage the vehicles used for reservations.</string>
+    <string name="vehicles_title">My vehicles</string>
+    <string name="vehicles_add">Add a vehicle</string>
+    <string name="vehicles_default_name">Blue sedan</string>
+    <string name="vehicles_default_plate">123 TUN 4567</string>
     <string name="auth_app_tagline">Trouvez. Réservez. Garez-vous.</string>
     <string name="auth_welcome_title">Trouvez votre place de parking facilement</string>
     <string name="auth_welcome_body">Découvrez les parkings disponibles près de vous et réservez votre place en quelques secondes.</string>
