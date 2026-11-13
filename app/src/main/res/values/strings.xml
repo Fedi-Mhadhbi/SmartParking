@@ -39,6 +39,9 @@
     <string name="reservation_title">Configure reservation</string>
     <string name="reservation_location">Tunis, Tunisia</string>
     <string name="reservation_date">Date and time</string>
+    <string name="reservation_select_date">Select a date</string>
+    <string name="reservation_select">Select</string>
+    <string name="reservation_cancel">Cancel</string>
     <string name="reservation_vehicle">Vehicle</string>
     <string name="reservation_default_vehicle">My blue sedan</string>
     <string name="reservation_duration">Parking duration</string>

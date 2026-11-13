@@ -21,11 +21,16 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -41,20 +46,28 @@ import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun ReservationScreen(
     parkingName: String,
     onBack: () -> Unit,
     onConfirm: () -> Unit,
 ) {
     var duration by remember { mutableIntStateOf(1) }
-    var selectedDate by remember { mutableStateOf("Today, 13 November") }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var selectedDateMillis by remember { mutableStateOf<Long?>(null) }
     val hourlyPrice = when (parkingName) {
         "Parking Lafayette" -> 2.0
         "Parking Municipal" -> 1.8
         else -> 2.5
     }
+    val selectedDate = selectedDateMillis?.let { millis ->
+        SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date(millis))
+    } ?: stringResource(R.string.reservation_select_date)
 
     Column(
         modifier = Modifier
@@ -105,7 +118,7 @@ fun ReservationScreen(
             icon = Icons.Default.CalendarMonth,
             label = stringResource(R.string.reservation_date),
             value = selectedDate,
-            onClick = { selectedDate = "Tomorrow, 14 November" },
+            onClick = { showDatePicker = true },
         )
         ReservationField(
             icon = Icons.Default.DirectionsCar,
@@ -186,6 +199,32 @@ fun ReservationScreen(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
+        }
+    }
+
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedDateMillis,
+        )
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        selectedDateMillis = datePickerState.selectedDateMillis
+                        showDatePicker = false
+                    },
+                ) {
+                    Text(stringResource(R.string.reservation_select))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(stringResource(R.string.reservation_cancel))
+                }
+            },
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 }
