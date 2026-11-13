@@ -36,6 +36,15 @@
     <string name="parking_secure">Secure parking</string>
     <string name="parking_accessible">Accessible</string>
     <string name="parking_reserve">Choose this parking</string>
+    <string name="reservation_title">Configure reservation</string>
+    <string name="reservation_location">Tunis, Tunisia</string>
+    <string name="reservation_date">Date and time</string>
+    <string name="reservation_vehicle">Vehicle</string>
+    <string name="reservation_default_vehicle">My blue sedan</string>
+    <string name="reservation_duration">Parking duration</string>
+    <string name="reservation_hours">%1$d hour(s)</string>
+    <string name="reservation_total">Estimated total</string>
+    <string name="reservation_confirm">Continue to confirmation</string>
     <string name="auth_app_tagline">Trouvez. Réservez. Garez-vous.</string>
     <string name="auth_welcome_title">Trouvez votre place de parking facilement</string>
     <string name="auth_welcome_body">Découvrez les parkings disponibles près de vous et réservez votre place en quelques secondes.</string>

@@ -6,7 +6,11 @@ object NavRoutes {
     const val BOOKINGS = "bookings"
     const val PROFILE = "profile"
     const val PARKING_DETAILS = "parking_details/{parkingName}"
+    const val RESERVATION = "reservation/{parkingName}"
 
     fun parkingDetails(parkingName: String): String =
         "parking_details/${android.net.Uri.encode(parkingName)}"
+
+    fun reservation(parkingName: String): String =
+        "reservation/${android.net.Uri.encode(parkingName)}"
 }

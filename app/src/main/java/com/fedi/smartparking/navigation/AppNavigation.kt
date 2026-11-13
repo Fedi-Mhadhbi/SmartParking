@@ -21,6 +21,7 @@ import com.fedi.smartparking.R
 import com.fedi.smartparking.features.home.DriverHomeScreen
 import com.fedi.smartparking.features.explore.ExploreScreen
 import com.fedi.smartparking.features.parking.ParkingDetailsScreen
+import com.fedi.smartparking.features.reservation.ReservationScreen
 
 @Composable
 fun AppNavigation() {
@@ -74,7 +75,21 @@ fun AppNavigation() {
                 ParkingDetailsScreen(
                     parkingName = entry.arguments?.getString("parkingName").orEmpty(),
                     onBack = { navController.popBackStack() },
-                    onReserve = {},
+                    onReserve = {
+                        navController.navigate(
+                            NavRoutes.reservation(entry.arguments?.getString("parkingName").orEmpty()),
+                        )
+                    },
+                )
+            }
+            composable(
+                route = NavRoutes.RESERVATION,
+                arguments = listOf(navArgument("parkingName") { type = NavType.StringType }),
+            ) { entry ->
+                ReservationScreen(
+                    parkingName = entry.arguments?.getString("parkingName").orEmpty(),
+                    onBack = { navController.popBackStack() },
+                    onConfirm = { navController.popBackStack() },
                 )
             }
             composable(NavRoutes.BOOKINGS) { SectionPlaceholder() }
