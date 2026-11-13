@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +34,7 @@ import com.fedi.smartparking.ui.theme.PrimaryBlue
 @Composable
 fun ProfileScreen(
     onVehiclesClick: () -> Unit,
+    onHelpClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -83,6 +85,12 @@ fun ProfileScreen(
             title = stringResource(R.string.profile_vehicles),
             subtitle = stringResource(R.string.profile_vehicles_subtitle),
             onClick = onVehiclesClick,
+        )
+        ProfileOption(
+            icon = Icons.Default.HelpOutline,
+            title = stringResource(R.string.profile_help),
+            subtitle = stringResource(R.string.profile_help_subtitle),
+            onClick = onHelpClick,
         )
     }
 }
