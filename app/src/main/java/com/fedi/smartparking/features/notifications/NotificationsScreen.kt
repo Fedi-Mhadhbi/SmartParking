@@ -23,7 +23,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,27 +47,38 @@ private data class NotificationItem(
 
 @Composable
 fun NotificationsScreen(onBack: () -> Unit) {
-    val notifications = listOf(
+    val bookingConfirmedTitle = stringResource(R.string.notification_booking_confirmed_title)
+    val bookingConfirmedMessage = stringResource(R.string.notification_booking_confirmed_message)
+    val reminderTitle = stringResource(R.string.notification_reminder_title)
+    val reminderMessage = stringResource(R.string.notification_reminder_message)
+    val welcomeTitle = stringResource(R.string.notification_welcome_title)
+    val welcomeMessage = stringResource(R.string.notification_welcome_message)
+    val today = stringResource(R.string.notification_today)
+    val yesterday = stringResource(R.string.notification_yesterday)
+    val lastWeek = stringResource(R.string.notification_last_week)
+    val notifications = remember {
+        mutableStateListOf(
         NotificationItem(
-            title = stringResource(R.string.notification_booking_confirmed_title),
-            message = stringResource(R.string.notification_booking_confirmed_message),
-            time = stringResource(R.string.notification_today),
+            title = bookingConfirmedTitle,
+            message = bookingConfirmedMessage,
+            time = today,
             isUnread = true,
             completed = true,
         ),
         NotificationItem(
-            title = stringResource(R.string.notification_reminder_title),
-            message = stringResource(R.string.notification_reminder_message),
-            time = stringResource(R.string.notification_yesterday),
+            title = reminderTitle,
+            message = reminderMessage,
+            time = yesterday,
             isUnread = true,
         ),
         NotificationItem(
-            title = stringResource(R.string.notification_welcome_title),
-            message = stringResource(R.string.notification_welcome_message),
-            time = stringResource(R.string.notification_last_week),
+            title = welcomeTitle,
+            message = welcomeMessage,
+            time = lastWeek,
             isUnread = false,
         ),
-    )
+        )
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -77,7 +91,10 @@ fun NotificationsScreen(onBack: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
@@ -97,17 +114,38 @@ fun NotificationsScreen(onBack: () -> Unit) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+                TextButton(
+                    onClick = {
+                        notifications.indices.forEach { index ->
+                            notifications[index] = notifications[index].copy(isUnread = false)
+                        }
+                    },
+                ) {
+                    Text(stringResource(R.string.notifications_mark_all_read))
+                }
             }
         }
         items(notifications) { notification ->
-            NotificationCard(notification)
+            NotificationCard(
+                notification = notification,
+                onClick = {
+                    val index = notifications.indexOf(notification)
+                    if (index >= 0) {
+                        notifications[index] = notification.copy(isUnread = !notification.isUnread)
+                    }
+                },
+            )
         }
     }
 }
 
 @Composable
-private fun NotificationCard(notification: NotificationItem) {
+private fun NotificationCard(
+    notification: NotificationItem,
+    onClick: () -> Unit,
+) {
     Surface(
+        onClick = onClick,
         color = if (notification.isUnread) Color.White else Color(0xFFF7F9FC),
         shape = RoundedCornerShape(18.dp),
         shadowElevation = if (notification.isUnread) 2.dp else 0.dp,

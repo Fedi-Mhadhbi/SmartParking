@@ -22,15 +22,16 @@ import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    onFinished: () -> Unit,
+    onFinished: (isAuthenticated: Boolean) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         delay(900)
-        onFinished()
+        onFinished(FirebaseAuth.getInstance().currentUser != null)
     }
 
     Box(

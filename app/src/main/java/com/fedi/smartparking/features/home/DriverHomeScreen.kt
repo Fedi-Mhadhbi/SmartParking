@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tune
@@ -41,6 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,11 +55,14 @@ import com.fedi.smartparking.ui.theme.LightBorder
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
 import com.fedi.smartparking.ui.theme.SmartParkingSpacing
+import com.fedi.smartparking.features.explore.ParkingMap
 
 @Composable
 fun DriverHomeScreen(
     onParkingClick: (ParkingCardUiModel) -> Unit,
     onNotificationsClick: () -> Unit = {},
+    onSeeAllClick: () -> Unit = {},
+    onVehiclesClick: () -> Unit = {},
     homeViewModel: HomeViewModel = viewModel(),
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
@@ -82,15 +88,26 @@ fun DriverHomeScreen(
                 query = uiState.searchQuery,
                 onQueryChange = homeViewModel::updateSearchQuery,
             )
-            MapPreview()
+            VehiclesShortcut(onClick = onVehiclesClick)
+            ParkingMap(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(178.dp),
+            )
             SectionHeader(
                 title = stringResource(R.string.home_nearby_title),
                 action = stringResource(R.string.home_see_all),
+                onActionClick = onSeeAllClick,
             )
             LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                 items(uiState.nearbyParkings) { parking ->
                     ParkingCard(
-                        parking = parking,
+                        parking = parking.copy(
+                            availableSpaces = ParkingAvailabilityStore.available(
+                                parking.name,
+                                parking.availableSpaces,
+                            ),
+                        ),
                         onClick = { onParkingClick(parking) },
                     )
                 }
@@ -98,12 +115,59 @@ fun DriverHomeScreen(
             SectionHeader(
                 title = stringResource(R.string.home_recommended),
                 action = stringResource(R.string.home_see_all),
+                onActionClick = onSeeAllClick,
             )
             FeaturedParkingCard(
                 parking = uiState.nearbyParkings.first(),
                 onClick = { onParkingClick(uiState.nearbyParkings.first()) },
             )
             Spacer(modifier = Modifier.height(12.dp))
+        }
+    }
+}
+
+@Composable
+private fun VehiclesShortcut(onClick: () -> Unit) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        color = Color.White,
+        shape = RoundedCornerShape(16.dp),
+        shadowElevation = 1.dp,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Default.DirectionsCar,
+                contentDescription = null,
+                tint = PrimaryBlue,
+                modifier = Modifier.size(24.dp),
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 12.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.home_my_vehicles),
+                    color = Navy,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = stringResource(R.string.home_my_vehicles_subtitle),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+            Text(
+                text = stringResource(R.string.home_manage),
+                color = PrimaryBlue,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+            )
         }
     }
 }
@@ -267,6 +331,7 @@ private fun MapPin(
 private fun SectionHeader(
     title: String,
     action: String,
+    onActionClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -278,11 +343,13 @@ private fun SectionHeader(
             style = MaterialTheme.typography.titleMedium,
             color = Navy,
         )
-        Text(
-            text = action,
-            style = MaterialTheme.typography.labelLarge,
-            color = PrimaryBlue,
-        )
+        androidx.compose.material3.TextButton(onClick = onActionClick) {
+            Text(
+                text = action,
+                style = MaterialTheme.typography.labelLarge,
+                color = PrimaryBlue,
+            )
+        }
     }
 }
 
@@ -300,8 +367,8 @@ private fun ParkingCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column {
-            ParkingIllustration(
-                accentColor = Color(parking.accentColor),
+            ParkingPhoto(
+                parking = parking,
                 modifier = Modifier.fillMaxWidth().height(116.dp),
             )
             Column(
@@ -356,8 +423,8 @@ private fun FeaturedParkingCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            ParkingIllustration(
-                accentColor = Color(parking.accentColor),
+            ParkingPhoto(
+                parking = parking,
                 modifier = Modifier.size(88.dp).clip(RoundedCornerShape(14.dp)),
             )
             Column(
@@ -391,25 +458,39 @@ private fun FeaturedParkingCard(
 }
 
 @Composable
-private fun ParkingIllustration(
-    accentColor: Color,
+fun ParkingPhoto(
+    parking: ParkingCardUiModel,
     modifier: Modifier,
 ) {
     Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(18.dp))
-            .background(
-                Brush.linearGradient(
-                    listOf(accentColor.copy(alpha = 0.9f), Navy),
-                ),
-            ),
-        contentAlignment = Alignment.Center,
+        modifier = modifier.clip(RoundedCornerShape(18.dp)),
     ) {
+        androidx.compose.foundation.Image(
+            painter = painterResource(parking.imageResId),
+            contentDescription = parking.name,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(58.dp)
+                .align(Alignment.BottomCenter)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(Color.Transparent, Color.Black.copy(alpha = 0.78f)),
+                    ),
+                ),
+        )
         Text(
-            text = "P",
+            text = parking.name,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(horizontal = 10.dp, vertical = 8.dp),
             color = Color.White,
-            style = MaterialTheme.typography.displaySmall,
+            style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Bold,
+            maxLines = 1,
         )
     }
 }

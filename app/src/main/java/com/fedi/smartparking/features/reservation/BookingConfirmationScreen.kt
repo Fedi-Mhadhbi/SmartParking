@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun BookingConfirmationScreen(
@@ -87,9 +90,23 @@ fun BookingConfirmationScreen(
             }
         }
         ConfirmationRow(stringResource(R.string.confirmation_parking), parkingName)
-        ConfirmationRow(stringResource(R.string.confirmation_date), stringResource(R.string.reservation_select_date))
-        ConfirmationRow(stringResource(R.string.confirmation_duration), stringResource(R.string.reservation_hours, 1))
-        ConfirmationRow(stringResource(R.string.confirmation_total), stringResource(R.string.home_per_hour, 2.5))
+        val selection = DemoReservationStore.current
+        val date = selection?.startAtMillis?.let {
+            SimpleDateFormat("dd MMMM yyyy · HH:mm", Locale.getDefault()).format(Date(it))
+        } ?: stringResource(R.string.reservation_select_date)
+        val duration = selection?.durationHours ?: 1
+        val total = selection?.let { it.hourlyPrice * it.durationHours } ?: 2.5
+        ConfirmationRow(stringResource(R.string.confirmation_date), date)
+        ConfirmationRow(stringResource(R.string.confirmation_duration), stringResource(R.string.reservation_hours, duration))
+        ConfirmationRow(
+            stringResource(R.string.confirmation_vehicle),
+            selection?.vehicleName ?: stringResource(R.string.reservation_no_vehicle),
+        )
+        ConfirmationRow(
+            stringResource(R.string.confirmation_spot),
+            selection?.parkingSpot ?: stringResource(R.string.reservation_no_spot),
+        )
+        ConfirmationRow(stringResource(R.string.confirmation_total), stringResource(R.string.home_per_hour, total))
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = onConfirm,

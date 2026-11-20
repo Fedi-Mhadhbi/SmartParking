@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.LocalParking
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Wc
 import androidx.compose.material3.Button
@@ -36,6 +39,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
+import com.fedi.smartparking.features.home.ParkingAvailabilityStore
+import com.fedi.smartparking.features.home.ParkingCardUiModel
+import com.fedi.smartparking.features.home.ParkingPhoto
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
 
@@ -50,7 +56,8 @@ fun ParkingDetailsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState()),
     ) {
         Box(
             modifier = Modifier
@@ -62,6 +69,18 @@ fun ParkingDetailsScreen(
                     ),
                 ),
         ) {
+            ParkingPhoto(
+                parking = ParkingCardUiModel(
+                    name = parking.name,
+                    address = parking.address,
+                    distanceKm = parking.distanceKm,
+                    hourlyPrice = parking.hourlyPrice,
+                    availableSpaces = parking.availableSpaces,
+                    accentColor = 0xFF034EE1,
+                    imageResId = parking.imageResId,
+                ),
+                modifier = Modifier.fillMaxSize(),
+            )
             IconButton(
                 onClick = onBack,
                 modifier = Modifier
@@ -74,14 +93,6 @@ fun ParkingDetailsScreen(
                     tint = Navy,
                 )
             }
-            Icon(
-                imageVector = Icons.Default.DirectionsCar,
-                contentDescription = null,
-                tint = PrimaryBlue.copy(alpha = 0.72f),
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(100.dp),
-            )
             Surface(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -134,7 +145,10 @@ fun ParkingDetailsScreen(
                     modifier = Modifier.weight(1f),
                 )
                 DetailMetric(
-                    value = parking.availableSpaces.toString(),
+                    value = ParkingAvailabilityStore.available(
+                        parking.name,
+                        parking.availableSpaces,
+                    ).toString(),
                     label = stringResource(R.string.parking_spaces_label),
                     modifier = Modifier.weight(1f),
                 )
@@ -143,6 +157,46 @@ fun ParkingDetailsScreen(
                     label = stringResource(R.string.parking_distance_label),
                     modifier = Modifier.weight(1f),
                 )
+            }
+            val availableSpaces = ParkingAvailabilityStore.available(
+                parking.name,
+                parking.availableSpaces,
+            )
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = if (availableSpaces > 0) Color(0xFFE9F8F1) else Color(0xFFFFEDEC),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Row(
+                    modifier = Modifier.padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LocalParking,
+                        contentDescription = null,
+                        tint = if (availableSpaces > 0) Color(0xFF168A68) else Color(0xFFB3261E),
+                        modifier = Modifier.size(24.dp),
+                    )
+                    Column(modifier = Modifier.padding(start = 10.dp)) {
+                        Text(
+                            text = if (availableSpaces > 0) {
+                                stringResource(R.string.parking_available_now)
+                            } else {
+                                stringResource(R.string.parking_full)
+                            },
+                            color = if (availableSpaces > 0) Color(0xFF126B52) else Color(0xFF8C1D18),
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            text = stringResource(
+                                R.string.parking_available_spaces,
+                                availableSpaces,
+                            ),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                }
             }
             Text(
                 text = stringResource(R.string.parking_amenities),
@@ -165,7 +219,7 @@ fun ParkingDetailsScreen(
                     modifier = Modifier.weight(1f),
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(4.dp))
             Button(
                 onClick = onReserve,
                 modifier = Modifier
@@ -228,11 +282,19 @@ private data class ParkingDetails(
     val hourlyPrice: Double,
     val availableSpaces: Int,
     val distanceKm: Double,
+    val imageResId: Int,
 )
 
 private fun parkingDetails(name: String): ParkingDetails =
     when (name) {
-        "Parking Lafayette" -> ParkingDetails(name, "Rue de Palestine", 2.0, 8, 0.8)
-        "Parking Municipal" -> ParkingDetails(name, "Centre-ville de Tunis", 1.8, 5, 1.2)
-        else -> ParkingDetails(name, "Avenue Habib Bourguiba", 2.5, 12, 0.3)
+        "Parking Lafayette" -> ParkingDetails(name, "Rue de Palestine", 2.0, 8, 0.8, R.drawable.lafayette)
+        "Parking Municipal" -> ParkingDetails(name, "Centre-ville de Tunis", 1.8, 5, 1.2, R.drawable.bab_bhar)
+        "Parking Les Berges du Lac" -> ParkingDetails(name, "Les Berges du Lac 1", 2.8, 21, 2.4, R.drawable.lac_2)
+        "Parking Lac 2" -> ParkingDetails(name, "Les Berges du Lac 2", 2.2, 14, 3.1, R.drawable.lac_2)
+        "Parking El Menzah" -> ParkingDetails(name, "El Menzah 5", 1.5, 9, 3.8, R.drawable.el_menzah)
+        "Parking Mutuelleville" -> ParkingDetails(name, "Mutuelleville, Tunis", 1.7, 17, 4.2, R.drawable.el_menzah)
+        "Parking La Marsa Centre" -> ParkingDetails(name, "Avenue Habib Bourguiba, La Marsa", 3.0, 26, 11.6, R.drawable.la_marsa)
+        "Parking Carthage" -> ParkingDetails(name, "Carthage Hannibal", 2.4, 11, 10.4, R.drawable.carthage)
+        "Parking Bab Bhar" -> ParkingDetails(name, "Place de la Victoire", 1.6, 7, 0.9, R.drawable.bab_bhar)
+        else -> ParkingDetails(name, "Avenue Habib Bourguiba", 2.5, 12, 0.3, R.drawable.tunis_theatre)
     }

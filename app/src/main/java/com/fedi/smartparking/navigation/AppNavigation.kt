@@ -24,11 +24,16 @@ import com.fedi.smartparking.features.parking.ParkingDetailsScreen
 import com.fedi.smartparking.features.reservation.ReservationScreen
 import com.fedi.smartparking.features.reservation.BookingConfirmationScreen
 import com.fedi.smartparking.features.reservation.BookingSuccessScreen
+import com.fedi.smartparking.features.reservation.DemoReservationStore
+import com.fedi.smartparking.features.reservation.ReservationSelection
 import com.fedi.smartparking.features.bookings.BookingsScreen
 import com.fedi.smartparking.features.bookings.BookingDetailsScreen
 import com.fedi.smartparking.features.profile.ProfileScreen
+import com.fedi.smartparking.features.profile.LanguageScreen
 import com.fedi.smartparking.features.notifications.NotificationsScreen
 import com.fedi.smartparking.features.support.HelpSupportScreen
+import com.fedi.smartparking.features.payment.PaymentScreen
+import com.fedi.smartparking.features.vehicles.MyVehiclesScreen
 
 @Composable
 fun AppNavigation() {
@@ -66,6 +71,8 @@ fun AppNavigation() {
                 DriverHomeScreen(
                     onParkingClick = { navController.navigate(NavRoutes.EXPLORE) },
                     onNotificationsClick = { navController.navigate(NavRoutes.NOTIFICATIONS) },
+                    onSeeAllClick = { navController.navigate(NavRoutes.EXPLORE) },
+                    onVehiclesClick = { navController.navigate(NavRoutes.MY_VEHICLES) },
                 )
             }
             composable(NavRoutes.NOTIFICATIONS) {
@@ -73,7 +80,12 @@ fun AppNavigation() {
             }
             composable(NavRoutes.EXPLORE) {
                 ExploreScreen(
-                    onBack = { navController.popBackStack() },
+                    onBack = {
+                        navController.navigate(NavRoutes.HOME) {
+                            popUpTo(NavRoutes.HOME) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    },
                     onParkingClick = { parking ->
                         navController.navigate(NavRoutes.parkingDetails(parking.name))
                     },
@@ -99,8 +111,23 @@ fun AppNavigation() {
             ) { entry ->
                 ReservationScreen(
                     parkingName = entry.arguments?.getString("parkingName").orEmpty(),
-                    onBack = { navController.popBackStack() },
-                    onConfirm = {
+                    onBack = {
+                        navController.navigate(NavRoutes.HOME) {
+                            popUpTo(NavRoutes.HOME) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    },
+                    onConfirm = { startAtMillis, durationHours, hourlyPrice, vehicleName, parkingSpot ->
+                        DemoReservationStore.add(
+                            ReservationSelection(
+                                parkingName = entry.arguments?.getString("parkingName").orEmpty(),
+                                startAtMillis = startAtMillis,
+                                durationHours = durationHours,
+                                hourlyPrice = hourlyPrice,
+                                vehicleName = vehicleName,
+                                parkingSpot = parkingSpot,
+                            ),
+                        )
                         navController.navigate(
                             NavRoutes.bookingConfirmation(entry.arguments?.getString("parkingName").orEmpty()),
                         )
@@ -115,6 +142,20 @@ fun AppNavigation() {
                     parkingName = entry.arguments?.getString("parkingName").orEmpty(),
                     onBack = { navController.popBackStack() },
                     onConfirm = {
+                        navController.navigate(
+                            NavRoutes.payment(entry.arguments?.getString("parkingName").orEmpty()),
+                        )
+                    },
+                )
+            }
+            composable(
+                route = NavRoutes.PAYMENT,
+                arguments = listOf(navArgument("parkingName") { type = NavType.StringType }),
+            ) { entry ->
+                PaymentScreen(
+                    parkingName = entry.arguments?.getString("parkingName").orEmpty(),
+                    onBack = { navController.popBackStack() },
+                    onPaymentComplete = {
                         navController.navigate(
                             NavRoutes.bookingSuccess(entry.arguments?.getString("parkingName").orEmpty()),
                         )
@@ -159,11 +200,25 @@ fun AppNavigation() {
                 ProfileScreen(
                     onHelpClick = { navController.navigate(NavRoutes.HELP) },
                     onBookingsClick = { navController.navigate(NavRoutes.BOOKINGS) },
+                    onVehiclesClick = { navController.navigate(NavRoutes.MY_VEHICLES) },
                     onNotificationsClick = { navController.navigate(NavRoutes.NOTIFICATIONS) },
+                    onLanguageClick = { navController.navigate(NavRoutes.LANGUAGE) },
+                    onLogout = {
+                        com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+                        navController.navigate(AuthRoutes.WELCOME) {
+                            popUpTo(NavRoutes.HOME) { inclusive = true }
+                        }
+                    },
                 )
+            }
+            composable(NavRoutes.MY_VEHICLES) {
+                MyVehiclesScreen(onBack = { navController.popBackStack() })
             }
             composable(NavRoutes.HELP) {
                 HelpSupportScreen(onBack = { navController.popBackStack() })
+            }
+            composable(NavRoutes.LANGUAGE) {
+                LanguageScreen(onBack = { navController.popBackStack() })
             }
         }
     }

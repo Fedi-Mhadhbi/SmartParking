@@ -15,11 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tune
@@ -33,11 +31,13 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,10 +45,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fedi.smartparking.R
+import com.fedi.smartparking.features.home.ParkingAvailabilityStore
 import com.fedi.smartparking.features.home.ParkingCardUiModel
+import com.fedi.smartparking.features.home.ParkingPhoto
 import com.fedi.smartparking.ui.theme.LightBorder
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun ExploreScreen(
@@ -58,6 +65,14 @@ fun ExploreScreen(
 ) {
     val uiState by exploreViewModel.uiState.collectAsStateWithLifecycle()
     val visibleParkings = uiState.parkings
+        .map { parking ->
+            parking.copy(
+                availableSpaces = ParkingAvailabilityStore.available(
+                    parking.name,
+                    parking.availableSpaces,
+                ),
+            )
+        }
         .filter { parking ->
             uiState.query.isBlank() ||
                 parking.name.contains(uiState.query, ignoreCase = true) ||
@@ -108,18 +123,6 @@ fun ExploreScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                Surface(
-                    color = Color.White,
-                    shape = CircleShape,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, LightBorder),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.DirectionsCar,
-                        contentDescription = null,
-                        tint = PrimaryBlue,
-                        modifier = Modifier.padding(10.dp).size(20.dp),
-                    )
-                }
             }
         }
         item {
@@ -143,7 +146,13 @@ fun ExploreScreen(
                 ),
             )
         }
-        item { ExploreMapPreview() }
+        item {
+            ParkingMap(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(260.dp),
+            )
+        }
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 ExploreFilterChip(
@@ -186,67 +195,62 @@ fun ExploreScreen(
     }
 }
 
-@Composable
-private fun ExploreMapPreview() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(190.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(
-                Brush.linearGradient(listOf(Color(0xFFDCEBFA), Color(0xFFF6F9FC))),
-            ),
-    ) {
-        repeat(5) { index ->
-            Box(
-                modifier = Modifier
-                    .align(if (index % 2 == 0) Alignment.TopStart else Alignment.BottomEnd)
-                    .padding(
-                        start = (20 + index * 34).dp,
-                        top = (28 + index * 18).dp,
-                    )
-                    .width(130.dp)
-                    .height(2.dp)
-                    .background(Color.White.copy(alpha = 0.9f)),
-            )
-        }
-        ExploreMapPin(Modifier.align(Alignment.Center), "2.5 DT")
-        ExploreMapPin(Modifier.align(Alignment.TopEnd).padding(top = 42.dp, end = 42.dp), "1.8 DT")
-        ExploreMapPin(Modifier.align(Alignment.BottomStart).padding(bottom = 26.dp, start = 54.dp), "2 DT")
-        Text(
-            text = stringResource(R.string.explore_map_label),
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(14.dp)
-                .background(Color.White.copy(alpha = 0.92f), RoundedCornerShape(10.dp))
-                .padding(horizontal = 10.dp, vertical = 7.dp),
-            style = MaterialTheme.typography.labelLarge,
-            color = Navy,
-        )
-    }
-}
+private data class ExploreMapLocation(
+    val name: String,
+    val latitude: Double,
+    val longitude: Double,
+    val price: Double,
+)
+
+private val exploreMapLocations = listOf(
+    ExploreMapLocation("Parking Avenue", 36.8008, 10.1800, 2.5),
+    ExploreMapLocation("Parking Lafayette", 36.8085, 10.1815, 2.0),
+    ExploreMapLocation("Parking Municipal", 36.8065, 10.1810, 1.8),
+    ExploreMapLocation("Parking Les Berges du Lac", 36.8310, 10.2390, 2.8),
+    ExploreMapLocation("Parking Lac 2", 36.8460, 10.2600, 2.2),
+    ExploreMapLocation("Parking El Menzah", 36.8420, 10.1650, 1.5),
+    ExploreMapLocation("Parking Mutuelleville", 36.8330, 10.1780, 1.7),
+    ExploreMapLocation("Parking La Marsa Centre", 36.8780, 10.3240, 3.0),
+    ExploreMapLocation("Parking Carthage", 36.8520, 10.3230, 2.4),
+    ExploreMapLocation("Parking Bab Bhar", 36.8010, 10.1810, 1.6),
+)
 
 @Composable
-private fun ExploreMapPin(modifier: Modifier, price: String) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Surface(color = PrimaryBlue, shape = CircleShape, shadowElevation = 4.dp) {
-            Icon(
-                imageVector = Icons.Default.LocationOn,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.padding(8.dp).size(18.dp),
-            )
+fun ParkingMap(modifier: Modifier = Modifier) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val mapView = remember {
+        Configuration.getInstance().userAgentValue = context.packageName
+        MapView(context).apply {
+            setTileSource(TileSourceFactory.MAPNIK)
+            setMultiTouchControls(true)
+            controller.setZoom(12.0)
+            controller.setCenter(GeoPoint(36.8240, 10.1900))
         }
-        Text(
-            text = price,
-            modifier = Modifier
-                .padding(top = 2.dp)
-                .background(Color.White, RoundedCornerShape(6.dp))
-                .padding(horizontal = 5.dp, vertical = 2.dp),
-            style = MaterialTheme.typography.labelSmall,
-            color = Navy,
-        )
     }
+
+    DisposableEffect(mapView) {
+        mapView.onResume()
+        onDispose { mapView.onPause() }
+    }
+
+    AndroidView(
+        factory = { mapView },
+        modifier = modifier.clip(RoundedCornerShape(24.dp)),
+        update = { view ->
+            view.overlays.removeAll { it is Marker }
+            exploreMapLocations.forEach { location ->
+                view.overlays.add(
+                    Marker(view).apply {
+                        position = GeoPoint(location.latitude, location.longitude)
+                        title = location.name
+                        snippet = "${location.price} DT / heure"
+                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    },
+                )
+            }
+            view.invalidate()
+        },
+    )
 }
 
 @Composable
@@ -276,20 +280,10 @@ private fun ExploreParkingCard(parking: ParkingCardUiModel, onClick: () -> Unit)
             modifier = Modifier.padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(78.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color(parking.accentColor).copy(alpha = 0.16f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.LocationOn,
-                    contentDescription = null,
-                    tint = Color(parking.accentColor),
-                    modifier = Modifier.size(34.dp),
-                )
-            }
+            ParkingPhoto(
+                parking = parking,
+                modifier = Modifier.size(92.dp),
+            )
             Spacer(modifier = Modifier.width(14.dp))
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 Text(parking.name, style = MaterialTheme.typography.titleMedium, color = Navy)

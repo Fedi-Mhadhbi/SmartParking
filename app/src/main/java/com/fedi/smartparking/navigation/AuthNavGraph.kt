@@ -26,9 +26,13 @@ fun NavGraphBuilder.authNavGraph(
 ) {
     composable(AuthRoutes.SPLASH) {
         SplashScreen(
-            onFinished = {
-                navController.navigate(AuthRoutes.WELCOME) {
-                    popUpTo(AuthRoutes.SPLASH) { inclusive = true }
+            onFinished = { isAuthenticated ->
+                if (isAuthenticated) {
+                    onAuthenticated()
+                } else {
+                    navController.navigate(AuthRoutes.WELCOME) {
+                        popUpTo(AuthRoutes.SPLASH) { inclusive = true }
+                    }
                 }
             },
         )
@@ -67,8 +71,7 @@ private fun AuthLoginDestination(
 ) {
     LoginScreen(
         onLogin = { email, password ->
-            authViewModel.login(email, password)
-            onAuthenticated()
+            authViewModel.login(email, password, onAuthenticated)
         },
         onRegister = { navController.navigate(AuthRoutes.REGISTER) },
         onForgotPassword = { navController.navigate(AuthRoutes.FORGOT_PASSWORD) },
@@ -83,8 +86,7 @@ private fun AuthRegisterDestination(
 ) {
     RegisterScreen(
         onRegister = { fullName, email, password ->
-            authViewModel.register(fullName, email, password)
-            onAuthenticated()
+            authViewModel.register(fullName, email, password, onAuthenticated)
         },
         onLogin = { navController.navigate(AuthRoutes.LOGIN) },
     )

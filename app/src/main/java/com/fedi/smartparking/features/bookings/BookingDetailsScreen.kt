@@ -17,12 +17,17 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.QrCode2
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
+import com.fedi.smartparking.features.reservation.DemoReservationStore
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
 
@@ -39,6 +45,13 @@ fun BookingDetailsScreen(
     onBack: () -> Unit,
     onShowQr: () -> Unit,
 ) {
+    val booking = DemoReservationStore.current
+    val isCurrentBooking = booking?.parkingName == parkingName
+    val canCancel = isCurrentBooking &&
+        !DemoReservationStore.isCancelled &&
+        booking.startAtMillis - System.currentTimeMillis() >= 60 * 60 * 1000L
+    var showCancelDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,8 +90,16 @@ fun BookingDetailsScreen(
                     tint = Color(0xFF168A68),
                 )
                 Text(
-                    text = stringResource(R.string.bookings_upcoming_status),
-                    color = Color(0xFF168A68),
+                    text = if (DemoReservationStore.isCancelled && isCurrentBooking) {
+                        stringResource(R.string.bookings_canceled_status)
+                    } else {
+                        stringResource(R.string.bookings_upcoming_status)
+                    },
+                    color = if (DemoReservationStore.isCancelled && isCurrentBooking) {
+                        Color(0xFFB42318)
+                    } else {
+                        Color(0xFF168A68)
+                    },
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
@@ -106,7 +127,25 @@ fun BookingDetailsScreen(
         BookingDetailRow(
             icon = Icons.Default.CalendarMonth,
             label = stringResource(R.string.confirmation_date),
-            value = "13 November 2026 · 2 hours",
+            value = booking?.takeIf { isCurrentBooking }?.let {
+                val date = java.text.SimpleDateFormat(
+                    "dd MMMM yyyy · HH:mm",
+                    java.util.Locale.getDefault(),
+                ).format(java.util.Date(it.startAtMillis))
+                "$date · ${it.durationHours} hours"
+            } ?: "13 November 2026 · 2 hours",
+        )
+        BookingDetailRow(
+            icon = Icons.Default.QrCode2,
+            label = stringResource(R.string.confirmation_vehicle),
+            value = booking?.takeIf { isCurrentBooking }?.vehicleName
+                ?: stringResource(R.string.reservation_no_vehicle),
+        )
+        BookingDetailRow(
+            icon = Icons.Default.QrCode2,
+            label = stringResource(R.string.confirmation_spot),
+            value = booking?.takeIf { isCurrentBooking }?.parkingSpot
+                ?: stringResource(R.string.reservation_no_spot),
         )
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -118,7 +157,16 @@ fun BookingDetailsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(stringResource(R.string.confirmation_total), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("5.000 DT", color = PrimaryBlue, fontWeight = FontWeight.Bold)
+                Text(
+                    booking?.takeIf { isCurrentBooking }?.let {
+                        stringResource(
+                            R.string.home_per_hour,
+                            it.hourlyPrice * it.durationHours,
+                        )
+                    } ?: "5.000 DT",
+                    color = PrimaryBlue,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -135,6 +183,51 @@ fun BookingDetailsScreen(
                 fontWeight = FontWeight.Bold,
             )
         }
+        if (isCurrentBooking) {
+            Button(
+                onClick = { showCancelDialog = true },
+                enabled = canCancel,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB42318),
+                    disabledContainerColor = Color(0xFFE5B8B5),
+                ),
+            ) {
+                Text(
+                    text = when {
+                        DemoReservationStore.isCancelled -> stringResource(R.string.booking_cancelled)
+                        canCancel -> stringResource(R.string.booking_cancel)
+                        else -> stringResource(R.string.booking_cancel_too_late)
+                    },
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+        }
+    }
+    if (showCancelDialog) {
+        AlertDialog(
+            onDismissRequest = { showCancelDialog = false },
+            title = { Text(stringResource(R.string.booking_cancel_confirm_title)) },
+            text = { Text(stringResource(R.string.booking_cancel_confirm_message)) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        DemoReservationStore.cancelCurrent()
+                        showCancelDialog = false
+                    },
+                ) {
+                    Text(stringResource(R.string.booking_cancel_confirm))
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showCancelDialog = false }) {
+                    Text(stringResource(R.string.reservation_cancel))
+                }
+            },
+        )
     }
 }
 

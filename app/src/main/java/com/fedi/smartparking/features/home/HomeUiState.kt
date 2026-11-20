@@ -1,5 +1,8 @@
 package com.fedi.smartparking.features.home
 
+import com.fedi.smartparking.R
+import androidx.compose.runtime.mutableStateMapOf
+
 data class HomeUiState(
     val userName: String = "Ali",
     val location: String = "Tunis, Tunisia",
@@ -14,7 +17,22 @@ data class ParkingCardUiModel(
     val hourlyPrice: Double,
     val availableSpaces: Int,
     val accentColor: Long,
+    val imageResId: Int,
 )
+
+object ParkingAvailabilityStore {
+    private val spaces = mutableStateMapOf<String, Int>()
+
+    fun available(name: String, initial: Int): Int =
+        spaces.getOrPut(name) { initial }
+
+    fun reserve(name: String, initial: Int): Boolean {
+        val current = available(name, initial)
+        if (current <= 0) return false
+        spaces[name] = current - 1
+        return true
+    }
+}
 
 private val sampleParkings = listOf(
     ParkingCardUiModel(
@@ -24,6 +42,7 @@ private val sampleParkings = listOf(
         hourlyPrice = 2.5,
         availableSpaces = 12,
         accentColor = 0xFF034EE1,
+        imageResId = R.drawable.tunis_theatre,
     ),
     ParkingCardUiModel(
         name = "Parking Lafayette",
@@ -32,6 +51,7 @@ private val sampleParkings = listOf(
         hourlyPrice = 2.0,
         availableSpaces = 8,
         accentColor = 0xFF16A67A,
+        imageResId = R.drawable.lafayette,
     ),
     ParkingCardUiModel(
         name = "Parking Municipal",
@@ -40,5 +60,6 @@ private val sampleParkings = listOf(
         hourlyPrice = 1.8,
         availableSpaces = 5,
         accentColor = 0xFFF59E0B,
+        imageResId = R.drawable.bab_bhar,
     ),
 )

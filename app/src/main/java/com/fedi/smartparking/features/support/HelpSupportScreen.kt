@@ -21,6 +21,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -108,8 +112,10 @@ private fun SupportOption(
     title: String,
     message: String,
 ) {
+    var expanded by remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier.fillMaxWidth(),
+        onClick = { expanded = !expanded },
         color = Color.White,
         shape = RoundedCornerShape(18.dp),
         shadowElevation = 1.dp,
@@ -121,7 +127,14 @@ private fun SupportOption(
             Icon(icon, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(28.dp))
             Column(modifier = Modifier.padding(start = 12.dp)) {
                 Text(title, color = Navy, fontWeight = FontWeight.Bold)
-                Text(message, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (expanded) {
+                    Text(message, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                } else {
+                    Text(
+                        text = stringResource(R.string.support_tap_to_expand),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

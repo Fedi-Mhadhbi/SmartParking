@@ -42,9 +42,11 @@ fun DriverBottomNavigation(navController: NavHostController) {
                 selected = currentRoute == destination.route,
                 onClick = {
                     navController.navigate(destination.route) {
-                        popUpTo(NavRoutes.HOME) { saveState = true }
+                        popUpTo(NavRoutes.HOME) {
+                            saveState = false
+                        }
                         launchSingleTop = true
-                        restoreState = true
+                        restoreState = false
                     }
                 },
                 icon = {

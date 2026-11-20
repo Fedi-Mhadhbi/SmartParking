@@ -28,9 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fedi.smartparking.R
+import com.fedi.smartparking.features.reservation.DemoReservationStore
 import com.fedi.smartparking.ui.theme.Navy
 import com.fedi.smartparking.ui.theme.PrimaryBlue
 
@@ -39,6 +41,7 @@ private data class BookingUiModel(
     val address: String,
     val date: String,
     val duration: String,
+    val spot: String,
     val total: String,
     val status: BookingStatus,
 )
@@ -46,30 +49,37 @@ private data class BookingUiModel(
 private enum class BookingStatus {
     UPCOMING,
     COMPLETED,
+    CANCELED,
 }
 
 @Composable
 fun BookingsScreen(
     onBookingClick: (String) -> Unit = {},
 ) {
-    val bookings = listOf(
+    val context = LocalContext.current
+    val bookings = DemoReservationStore.history.map { reservation ->
         BookingUiModel(
-            parking = "Parking Avenue",
-            address = "Avenue Habib Bourguiba",
-            date = "13 November 2026",
-            duration = "2 hours",
-            total = "5.000 DT",
-            status = BookingStatus.UPCOMING,
-        ),
-        BookingUiModel(
-            parking = "Parking Lafayette",
-            address = "Rue de Palestine",
-            date = "08 November 2026",
-            duration = "1 hour",
-            total = "2.000 DT",
-            status = BookingStatus.COMPLETED,
-        ),
-    )
+            parking = reservation.parkingName,
+            address = "Tunis, Tunisia",
+            date = java.text.SimpleDateFormat(
+                "dd MMMM yyyy · HH:mm",
+                java.util.Locale.getDefault(),
+            ).format(java.util.Date(reservation.startAtMillis)),
+            duration = context.getString(R.string.reservation_hours, reservation.durationHours),
+            spot = reservation.parkingSpot,
+            total = context.getString(
+                R.string.home_per_hour,
+                reservation.hourlyPrice * reservation.durationHours,
+            ),
+            status = when {
+                reservation == DemoReservationStore.current && DemoReservationStore.isCancelled ->
+                    BookingStatus.CANCELED
+                reservation.startAtMillis <= System.currentTimeMillis() ->
+                    BookingStatus.COMPLETED
+                else -> BookingStatus.UPCOMING
+            },
+        )
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -115,7 +125,7 @@ fun BookingsScreen(
                 fontWeight = FontWeight.Bold,
             )
         }
-        items(bookings.filter { it.status == BookingStatus.COMPLETED }) { booking ->
+        items(bookings.filter { it.status != BookingStatus.UPCOMING }) { booking ->
             BookingCard(booking = booking, onClick = { onBookingClick(booking.parking) })
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -201,6 +211,13 @@ private fun BookingCard(
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                Text(
+                    text = stringResource(R.string.booking_spot_value, booking.spot),
+                    modifier = Modifier.padding(start = 12.dp),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = PrimaryBlue,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         }
     }
@@ -231,15 +248,27 @@ private fun BookingInfo(
 private fun StatusBadge(status: BookingStatus) {
     val isUpcoming = status == BookingStatus.UPCOMING
     Surface(
-        color = if (isUpcoming) Color(0xFFE6F7F1) else Color(0xFFF0F2F5),
+        color = when (status) {
+            BookingStatus.UPCOMING -> Color(0xFFE6F7F1)
+            BookingStatus.CANCELED -> Color(0xFFFFE9E9)
+            BookingStatus.COMPLETED -> Color(0xFFF0F2F5)
+        },
         shape = RoundedCornerShape(8.dp),
     ) {
         Text(
             text = stringResource(
-                if (isUpcoming) R.string.bookings_upcoming_status else R.string.bookings_completed_status,
+                when (status) {
+                    BookingStatus.UPCOMING -> R.string.bookings_upcoming_status
+                    BookingStatus.CANCELED -> R.string.bookings_canceled_status
+                    BookingStatus.COMPLETED -> R.string.bookings_completed_status
+                },
             ),
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
-            color = if (isUpcoming) Color(0xFF168A68) else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = when (status) {
+                BookingStatus.UPCOMING -> Color(0xFF168A68)
+                BookingStatus.CANCELED -> Color(0xFFB42318)
+                BookingStatus.COMPLETED -> MaterialTheme.colorScheme.onSurfaceVariant
+            },
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Bold,
         )
