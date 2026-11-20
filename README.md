@@ -14,11 +14,52 @@ EasyPar is a modern Android parking-reservation application for discovering park
 
 ## App preview
 
-<p align="center">
-  <img src="docs/screenshots/home-preview.jpg" alt="EasyPar home parking preview" width="32%">
-  <img src="docs/screenshots/explore-preview.jpg" alt="EasyPar parking map and photos" width="32%">
-  <img src="docs/screenshots/details-preview.jpg" alt="EasyPar parking details preview" width="32%">
-</p>
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="docs/screenshots/welcome-page.jpg" alt="EasyPar welcome page" width="220"><br>
+      <strong>Welcome page</strong><br>
+      <sub>Discover EasyPar and start your parking journey.</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/screenshots/home-page.jpg" alt="EasyPar home page" width="220"><br>
+      <strong>Home page</strong><br>
+      <sub>Find nearby parkings on the map and in the list.</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/screenshots/parking-details.jpg" alt="EasyPar parking details" width="220"><br>
+      <strong>Parking details</strong><br>
+      <sub>View price, distance, spaces, and parking amenities.</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/screenshots/configure-reservation.jpg" alt="EasyPar configure reservation" width="220"><br>
+      <strong>Configure reservation</strong><br>
+      <sub>Select the date, start time, and parking duration.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <img src="docs/screenshots/parking-place.jpg" alt="EasyPar parking place selection" width="220"><br>
+      <strong>Choose a parking place</strong><br>
+      <sub>Select an available section and exact place.</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/screenshots/my-reservations.jpg" alt="EasyPar my reservations" width="220"><br>
+      <strong>My reservations</strong><br>
+      <sub>Track upcoming and past parking reservations.</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/screenshots/reservation-confirmed.jpg" alt="EasyPar reservation confirmed" width="220"><br>
+      <strong>Reservation confirmed</strong><br>
+      <sub>Present the QR ticket when arriving at the parking.</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/screenshots/profile.jpg" alt="EasyPar profile page" width="220"><br>
+      <strong>Profile</strong><br>
+      <sub>Manage bookings, notifications, language, and support.</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
